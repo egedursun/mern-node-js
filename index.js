@@ -1,9 +1,27 @@
 const express = require("express")
 const bodyParser = require("body-parser")
+const morgan = require("morgan")
 
 const app = express()
 const jsonParser = bodyParser.json()
 app.use(jsonParser)
+
+// Exercise (3.8)
+morgan.token('person-info', function(req) {
+    if (req.method === "POST"){
+        if(req.body){
+            if(req.body.name && req.body.number){
+                const name = req.body.name
+                const number = req.body.number
+                return JSON.stringify({"name": name, "number": number})
+            }
+        }
+        return JSON.stringify({"error" : "Name or number is missing."})
+    }
+})
+
+// Exercise (3.7)
+app.use(morgan(":method :url :response-time :person-info"))
 
 let persons = [
     {
