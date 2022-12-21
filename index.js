@@ -59,6 +59,8 @@ const errorHandler = (error, request, response, next) => {
 
     if (error.name === "CastError"){
         return response.status(400).send({error: "malformatted id"})
+    } else if (error.name === "ValidationError") {
+        return response.status(400).json({error: error.message})
     }
 }
 app.use(errorHandler)
@@ -133,9 +135,10 @@ const generateID = () => {
 }
 
 // POST a new phonebook entry to the book (Ex. 3.5)
-app.post("/api/persons", (request, response) => {
+app.post("/api/persons", (request, response, next) => {
     const body = request.body
 
+    /*
     if (!body.name) {
         return response.status(400).json({
             error: "The 'name' field in the content is missing."
@@ -147,6 +150,8 @@ app.post("/api/persons", (request, response) => {
             error: "The 'number' field in the content is missing."
         })
     }
+
+     */
 
     /*
     if (persons.find(person => person.name === body.name)) {
@@ -166,6 +171,7 @@ app.post("/api/persons", (request, response) => {
     person.save().then(savedPerson => {
         response.json(savedPerson)
     })
+        .catch(error => next(error))
 
     /*
     persons = persons.concat(person)
@@ -177,16 +183,9 @@ app.post("/api/persons", (request, response) => {
 
 // Update user on phonebook
 app.put("/api/persons/:id", (request, response, next) => {
-    const body = request.body
+    const { name, number } = request.body
 
-    const person = {
-        name: body.name,
-        number: body.number,
-    }
-
-    console.log(person)
-
-    Person.findByIdAndUpdate(request.params.id, person, {new: true})
+    Person.findByIdAndUpdate(request.params.id, { name, number }, {new: true, runValidators: true, context: "query"})
         .then(updatedPerson => {
             response.json(updatedPerson)
         }).catch(error => next(error))

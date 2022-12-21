@@ -78,4 +78,13 @@ Content-Type: application/json
   "number": "999-999-99-99"
 }
 
-####
+###
+
+PUT https://mern-node-js-production.up.railway.app/api/persons/63a2f61696edba163c76c345
+Accept: application/json
+Content-Type: application/json
+
+{
+  "name": "deneme",
+  "number": "999-999-99-91"
+}
