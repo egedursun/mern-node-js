@@ -2,6 +2,7 @@ const express = require("express")
 const bodyParser = require("body-parser")
 const morgan = require("morgan")
 const cors = require("cors")
+const Person = require("./models/person")
 
 const app = express()
 const jsonParser = bodyParser.json()
@@ -25,6 +26,7 @@ morgan.token('person-info', function(req) {
 // Exercise (3.7)
 app.use(morgan(":method :url :response-time :person-info"))
 
+/*
 let persons = [
     {
         "id": 1,
@@ -48,6 +50,8 @@ let persons = [
     }
 ]
 
+ */
+
 app.get("/", (request, response) => {
     response.send("<h1>Welcome to My Server!</h1")
 })
@@ -61,11 +65,15 @@ app.get("/info", (request, response) => {
 
 // GET all persons and phonebook data (Ex. 3.1)
 app.get("/api/persons", (request, response) => {
-    response.json(persons)
+    // Exercise (3.13)
+    Person.find({}).then(persons => {
+        response.json(persons)
+    })
 })
 
 // GET  a single persons and phonebook entry (Ex. 3.3)
 app.get("/api/persons/:id", (request, response) => {
+    /*
     const id = Number(request.params.id)
     const person = persons.find(note => note.id === id)
 
@@ -75,6 +83,15 @@ app.get("/api/persons/:id", (request, response) => {
     else{
         response.status(404).end()
     }
+
+     */
+
+    // Exercise (3.13)
+    Person.findById(request.params.id).then(
+        person => {
+            response.json(person)
+        }
+    )
 })
 
 // DELETE a single entry from the phonebook (Ex. 3.4)
@@ -107,24 +124,34 @@ app.post("/api/persons", (request, response) => {
         })
     }
 
+    /*
     if (persons.find(person => person.name === body.name)) {
         return response.status(409).json({
             error: "This 'name' field already exists in the database."
         })
     }
 
-    const person = {
-        id: generateID(),
+     */
+
+    // Exercise (3.14)
+    const person = new Person({
         name: body.name,
         number: body.number
-    }
+    })
 
+    person.save().then(savedPerson => {
+        response.json(savedPerson)
+    })
+
+    /*
     persons = persons.concat(person)
     response.json(person)
+
+     */
 })
 
 
 
-const PORT = process.env.PORT || 3002
+const PORT = process.env.PORT
 app.listen(PORT)
 console.log(`Server running on port ${PORT}`)

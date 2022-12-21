@@ -1,41 +1,41 @@
 # GET all persons and phonebook entries.
-GET http://localhost:3001/api/persons
+GET http://localhost:3002/api/persons
 Accept: application/json
 
 ###
 
 # GET the information page.
-GET http://localhost:3001/info
+GET http://localhost:3002/info
 Accept: application/json
 
 ###
 
 # GET a single person and phonebook entry.
-GET http://localhost:3001/api/persons/3
+GET http://localhost:3002/api/persons/3
 Accept: application/json
 
 ###
 
 # DELETE an entry from the phonebook.
-DELETE http://localhost:3001/api/persons/4
+DELETE http://localhost:3002/api/persons/4
 Accept: application/json
 
 ###
 
 # POST a new entry to the phonebook.
-POST http://localhost:3001/api/persons
+POST http://localhost:3002/api/persons
 Accept: application/json
 Content-Type: application/json
 
 {
-  "name": "Ege Dogan Dursun",
-  "number": "0507-055-86-65"
+  "name": "Mert Tekin",
+  "number": "0555-555-55-55"
 }
 
 ###
 
 # Failed: POST new entry without name field.
-POST http://localhost:3001/api/persons
+POST http://localhost:3002/api/persons
 Accept: application/json
 Content-Type: application/json
 
@@ -46,7 +46,7 @@ Content-Type: application/json
 ###
 
 # Failed: POST new entry without phone field.
-POST http://localhost:3001/api/persons
+POST http://localhost:3002/api/persons
 Accept: application/json
 Content-Type: application/json
 
@@ -57,7 +57,7 @@ Content-Type: application/json
 ###
 
 # Failed: POST new entry with conflict in name field (already exists).
-POST http://localhost:3001/api/persons
+POST http://localhost:3002/api/persons
 Accept: application/json
 Content-Type: application/json
 
