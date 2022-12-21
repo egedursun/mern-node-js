@@ -17,7 +17,7 @@ Accept: application/json
 ###
 
 # DELETE an entry from the phonebook.
-DELETE http://localhost:3002/api/persons/4
+DELETE http://localhost:3002/api/persons/63a2f65e0aa1175ef37b9cfc
 Accept: application/json
 
 ###
@@ -65,3 +65,17 @@ Content-Type: application/json
   "name": "Arto Hellas",
   "number": "040-123456"
 }
+
+###
+
+# Update: PUT a new information for a user
+PUT http://localhost:3002/api/persons/63a2f61696edba163c76c345
+Accept: application/json
+Content-Type: application/json
+
+{
+  "name": "deneme",
+  "number": "999-999-99-99"
+}
+
+####

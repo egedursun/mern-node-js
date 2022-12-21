@@ -52,15 +52,30 @@ let persons = [
 
  */
 
+const errorHandler = (error, request, response, next) => {
+
+    // EXERCISE (3.16)
+    console.log(error.message)
+
+    if (error.name === "CastError"){
+        return response.status(400).send({error: "malformatted id"})
+    }
+}
+app.use(errorHandler)
+
 app.get("/", (request, response) => {
     response.send("<h1>Welcome to My Server!</h1")
 })
 
 // Create an Information Page (Ex. 3.2)
 app.get("/info", (request, response) => {
-    response.send(
-        `<p>Phonebook has info for ${persons.size} people</p> <p>${Date()}</p>`
-    )
+    let personSize = 0
+    Person.find({}).then(persons => {
+        personSize = persons.length
+        response.send(
+            `<p>Phonebook has info for ${personSize} people</p> <p>${Date()}</p>`
+        )
+    })
 })
 
 // GET all persons and phonebook data (Ex. 3.1)
@@ -95,12 +110,21 @@ app.get("/api/persons/:id", (request, response) => {
 })
 
 // DELETE a single entry from the phonebook (Ex. 3.4)
-app.delete("/api/persons/:id", (request, response) => {
-
+app.delete("/api/persons/:id", (request, response, next) => {
+    /*
     const id = Number(request.params.id)
     console.log(id)
     persons = persons.filter(person => person.id !== id)
     response.status(204).end()
+
+     */
+
+    // EXERCISE (3.15)
+    Person.findByIdAndRemove(request.params.id).then(
+        result => {
+            response.status(204).end()
+        }
+    ).catch(error => next(error))
 })
 
 // Generate a unique ID
@@ -150,6 +174,23 @@ app.post("/api/persons", (request, response) => {
      */
 })
 
+
+// Update user on phonebook
+app.put("/api/persons/:id", (request, response, next) => {
+    const body = request.body
+
+    const person = {
+        name: body.name,
+        number: body.number,
+    }
+
+    console.log(person)
+
+    Person.findByIdAndUpdate(request.params.id, person, {new: true})
+        .then(updatedPerson => {
+            response.json(updatedPerson)
+        }).catch(error => next(error))
+})
 
 
 const PORT = process.env.PORT
