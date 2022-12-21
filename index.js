@@ -162,6 +162,14 @@ app.post("/api/persons", (request, response, next) => {
 
      */
 
+    Person.find({}).then(persons => {
+        persons.map((person) => {
+            if (person.name === body.name){
+                response.json({message: "the person name already exists"}).end()
+            }
+        })
+    })
+
     // Exercise (3.14)
     const person = new Person({
         name: body.name,
@@ -184,6 +192,14 @@ app.post("/api/persons", (request, response, next) => {
 // Update user on phonebook
 app.put("/api/persons/:id", (request, response, next) => {
     const { name, number } = request.body
+
+    const person = new Person({
+        name: name,
+        number: number
+    })
+
+    const error = person.validateSync()
+
 
     Person.findByIdAndUpdate(request.params.id, { name, number }, {new: true, runValidators: true, context: "query"})
         .then(updatedPerson => {
