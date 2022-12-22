@@ -204,7 +204,7 @@ app.put("/api/persons/:id", (request, response, next) => {
 
     const error = person.validateSync()
     if (error !== undefined){
-        response.json({ message: error }).end()
+        next(error)
     }
 
     Person.findByIdAndUpdate(request.params.id, { name, number }, {new: true, runValidators: true, context: "query"})
