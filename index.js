@@ -10,7 +10,7 @@ app.use(jsonParser)
 app.use(cors())
 
 // Exercise (3.8)
-morgan.token('person-info', function(req) {
+morgan.token("person-info", function(req) {
     if (req.method === "POST"){
         if(req.body){
             if(req.body.name && req.body.number){
@@ -61,7 +61,11 @@ const errorHandler = (error, request, response, next) => {
         return response.status(400).send({error: "malformatted id"})
     } else if (error.name === "ValidationError") {
         return response.status(400).json({error: error.message})
+    } else if (error.name !== undefined) {
+        return response.status(400).json({error: error.message})
     }
+
+    next(error)
 }
 app.use(errorHandler)
 
